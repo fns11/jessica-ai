@@ -1,22 +1,16 @@
 const crypto = require('crypto');
 
-/**
- * Verifies the Vapi webhook signature.
- * Vapi sends X-Vapi-Signature as HMAC-SHA256 of the raw body.
- */
+// Vapi sends the raw secret in x-vapi-secret (not an HMAC signature).
 function vapiWebhookAuth(req, res, next) {
   const secret = process.env.VAPI_WEBHOOK_SECRET;
-  if (!secret) return next(); // Skip in dev if not configured
+  if (!secret) return next();
 
-  const signature = req.headers['x-vapi-signature'];
-  if (!signature) return res.status(401).json({ error: 'Missing signature' });
+  const provided = req.headers['x-vapi-secret'];
+  if (!provided) return res.status(401).json({ error: 'Missing signature' });
 
-  const expected = crypto
-    .createHmac('sha256', secret)
-    .update(JSON.stringify(req.body))
-    .digest('hex');
-
-  if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
+  const a = Buffer.from(secret);
+  const b = Buffer.from(provided);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
     return res.status(401).json({ error: 'Invalid signature' });
   }
   next();

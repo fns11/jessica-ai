@@ -36,4 +36,14 @@ function listClients() {
     .map(f => f.replace('.json', ''));
 }
 
-module.exports = { loadClient, reloadClient, listClients };
+function findClientByPhoneNumberId(phoneNumberId) {
+  for (const clientId of listClients()) {
+    try {
+      const config = loadClient(clientId);
+      if (config._meta?.vapiPhoneNumberId === phoneNumberId) return config;
+    } catch { /* skip malformed configs */ }
+  }
+  return null;
+}
+
+module.exports = { loadClient, reloadClient, listClients, findClientByPhoneNumberId };
