@@ -1,0 +1,12 @@
+{
+  "client_id": "your-business-slug",
+  "business_name": "Your Business Name",
+  "greeting": "Thanks for calling [Business Name], this is Jessica! How can I help you today?",
+  "hours": "Monday through Friday, 9am to 5pm Eastern",
+  "services": ["service one", "service two", "service three"],
+  "booking_url": "https://yourbusiness.com/book",
+  "escalation_number": "+1XXXXXXXXXX",
+  "voice_id": "rachel",
+  "personality": "friendly, professional, concise",
+  "custom_instructions": ""
+}
